@@ -26,17 +26,18 @@ namespace HashBreaker
             this.cryption = new Cryption();
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
-            this.cryption.type = comboBox1.SelectedItem.ToString();
-        }
-
         private void button3_Click(object sender, EventArgs e) {
             textBox2.Text = textBox2.Text.Trim();
             if (textBox2.Text == "") {
                 MessageBox.Show("Please enter a valid plain text!");
                 return;
             }
+            if (comboBox6.SelectedItem == null) {
+                MessageBox.Show("Please select a valid option for the hash type");
+                return;
+            }
             string selected = comboBox6.SelectedItem.ToString();
+            if ((selected.Equals("MD5") || selected.Equals("SHA-1") || selected.Equals("BASE64")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
             switch (selected) {
                 case "MD5":
                 case "SHA-1":
@@ -61,7 +62,12 @@ namespace HashBreaker
                 MessageBox.Show("Please enter a valid hash!");
                 return;
             }
+            if (comboBox1.SelectedItem == null) {
+                MessageBox.Show("Please select a valid option for the hash type");
+                return;
+            }
             string selected = comboBox1.SelectedItem.ToString();
+            if ((selected.Equals("MD5") || selected.Equals("SHA-1") || selected.Equals("BASE64")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
             switch (selected) {
                 case "MD5":
                 case "SHA-1":
