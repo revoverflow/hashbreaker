@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using System.Threading;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace HashBreaker
 {
@@ -24,7 +26,8 @@ namespace HashBreaker
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            string selected = comboBox1.SelectedItem.ToString();
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -34,20 +37,28 @@ namespace HashBreaker
                 MessageBox.Show("Please enter a valid hash.");
                 return;
             }
-
-            switch(comboBox1.SelectedItem)
+            string selected = comboBox1.SelectedItem.ToString();
+            switch (selected)
             {
                 case "MD5":
-                    decryptMD5();
-                    break;
                 case "SHA-1":
-                    MessageBox.Show("SHA-1 support will be added in the next update.");
-                    break;
-                case "AES":
-                    MessageBox.Show("AES support will be added in the next update.");
+                    if (!checkHash(selected, textBox1.Text)) {
+                        MessageBox.Show("Please enter a valid hash!");
+                        return;
+                    }
+                    disableButton(true);
+                    decrypt(selected);
                     break;
                 case "BASE64":
-                    MessageBox.Show("BASE64 support will be added in the next update.");
+                    if (!checkHash(selected, textBox1.Text)) {
+                        MessageBox.Show("Please enter a valid hash!");
+                        return;
+                    }
+                    int time = Environment.TickCount;
+                    string value = Encoding.UTF8.GetString(Convert.FromBase64String(textBox1.Text));
+                    int delay = Environment.TickCount - time;
+                    setLoadingLabel("Hash decrypted in " + delay + "ms : \"" + value + "\"");
+                    MessageBox.Show("The hash has been decrypted in " + delay + " milliseconds !\nValue : \"" + value + "\"");
                     break;
                 default:
                     MessageBox.Show("Please select a valid option for the hash type");
@@ -55,62 +66,81 @@ namespace HashBreaker
             }
         }
 
-        public void decryptMD5()
+        public bool checkHash(string type, string hash) {
+            hash = hash.Trim();
+            if (string.IsNullOrWhiteSpace(hash)) return false;
+            string pattern = "";
+            if (type.Equals("MD5")) pattern = "^[a-fA-F0-9]{32}$";
+            else if (type.Equals("SHA-1")) pattern = "^[a-fA-F0-9]{40}$";
+            else if (type.Equals("BASE64")) return (hash.Length % 4 == 0) && Regex.IsMatch(hash, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
+            return Regex.IsMatch(hash, pattern, RegexOptions.Compiled);
+        }
+
+        public void decrypt(string type)
         {
-            using (MD5 md5Hash = MD5.Create())
-            {
+            if (type.Equals("MD5")) {
                 string hash = textBox1.Text;
-                t = new Thread(() => BreakMD5(hash));
+                t = new Thread(() => Break(hash, type));
                 progressBar1.Style = ProgressBarStyle.Marquee;
                 progressBar1.MarqueeAnimationSpeed = 100;
                 button2.Visible = true;
                 t.Start();
             }
+           else if (type.Equals("SHA-1")) {
+                string hash = textBox1.Text;
+                t = new Thread(() => Break(hash, type));
+                progressBar1.Style = ProgressBarStyle.Marquee;
+                progressBar1.MarqueeAnimationSpeed = 100;
+                button2.Visible = true;
+                t.Start();
+            }
+
         }
 
-        public void BreakMD5(String target)
+        public void Break(String target, string type)
         {
             String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
             char[] charsArray = chars.ToCharArray();
 
-            using (MD5 md5Hash = MD5.Create())
+            var md5Hash = MD5.Create();
+            var sha1Hash = SHA1.Create();
+
+            int dwStartTime = System.Environment.TickCount;
+            int charindex = 0;
+
+            for (int length = 1; length <= 10; ++length)
             {
-                int dwStartTime = System.Environment.TickCount;
-                int charindex = 0;
+                setLoadingLabel("Length : " + length);
+                StringBuilder Sb = new StringBuilder(new String('a', length));
 
-                for (int length = 1; length <= 10; ++length)
+                while (true)
                 {
-                    setLoadingLabel("Length : " + length);
-                    StringBuilder Sb = new StringBuilder(new String('a', length));
+                    String value = Sb.ToString();
+                    String hashedval = (type.Equals("MD5") ? createMD5Hash(md5Hash, value) : type.Equals("SHA-1") ? createSHA1Hash(sha1Hash, value) : "N/A");
+                    int delay = System.Environment.TickCount - dwStartTime;
 
-                    while (true)
+                    if (hashedval.Equals(target))
                     {
-                        String value = Sb.ToString();
-                        String hashedval = createMD5Hash(md5Hash, value);
-                        int delay = System.Environment.TickCount - dwStartTime;
+                        setButtonState(false);
+                        stopLoading();
+                        setLoadingLabel("Hash decrypted in " + delay + "ms : \"" + value + "\"");
+                        MessageBox.Show("The hash has been decrypted in " + delay + " milliseconds !\nValue : \"" + value + "\"");
+                        disableButton(false);
+                        Thread.CurrentThread.Abort();
+                    }
 
-                        if (hashedval.Equals(target))
+                    if (value.All(item => item == '~'))
+                        break;
+
+                    for (int i = length - 1; i >= 0; i--)
+                    {
+                        if (Sb[i] != '~')
                         {
-                            setButtonState(false);
-                            stopLoading();
-                            setLoadingLabel("Hash decrypted in " + delay + "ms : \"" + value + "\"");
-                            MessageBox.Show("The hash has been decrypted in " + delay + " miliseconds !\nValue : \"" + value + "\"");
-                            Thread.CurrentThread.Abort();
-                        }
-
-                        if (value.All(item => item == '~'))
+                            Sb[i] = (Char)charsArray[chars.LastIndexOf(Sb[i]) + 1];
                             break;
-
-                        for (int i = length - 1; i >= 0; i--)
-                        {
-                            if (Sb[i] != '~')
-                            {
-                                Sb[i] = (Char)charsArray[chars.LastIndexOf(Sb[i]) + 1];
-                                break;
-                            }
-                            else
-                                Sb[i] = (Char)charsArray[0];
                         }
+                        else
+                            Sb[i] = (Char)charsArray[0];
                     }
                 }
             }
@@ -132,6 +162,14 @@ namespace HashBreaker
             }));
         }
 
+        public void disableButton(bool state)
+        {
+            button1.BeginInvoke(new MethodInvoker(() =>
+            {
+                button1.Visible = !state;
+            }));
+        }
+
         void stopLoading()
         {
             progressBar1.BeginInvoke(new MethodInvoker(() =>
@@ -143,6 +181,16 @@ namespace HashBreaker
         static string createMD5Hash(MD5 md5Hash, string input)
         {
             byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+            StringBuilder sBuilder = new StringBuilder();
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+            return sBuilder.ToString();
+        }
+        static string createSHA1Hash(SHA1 sha1Hash, string input)
+        {
+            byte[] data = sha1Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
             StringBuilder sBuilder = new StringBuilder();
             for (int i = 0; i < data.Length; i++)
             {

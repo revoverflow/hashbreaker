@@ -8,3 +8,12 @@ C:\Users\Overflow\source\HashBreaker\HashBreaker\obj\Debug\HashBreaker.csproj.Co
 C:\Users\Overflow\source\HashBreaker\HashBreaker\obj\Debug\HashBreaker.exe
 C:\Users\Overflow\source\HashBreaker\HashBreaker\obj\Debug\HashBreaker.pdb
 C:\Users\Overflow\source\HashBreaker\HashBreaker\obj\Debug\HashBreaker.HashBreaker.resources
+C:\Users\user\Desktop\Projets\Overflow\hashbreaker\bin\Debug\HashBreaker.exe.config
+C:\Users\user\Desktop\Projets\Overflow\hashbreaker\obj\Debug\HashBreaker.exe
+C:\Users\user\Desktop\Projets\Overflow\hashbreaker\obj\Debug\HashBreaker.pdb
+C:\Users\user\Desktop\Projets\Overflow\hashbreaker\bin\Debug\HashBreaker.exe
+C:\Users\user\Desktop\Projets\Overflow\hashbreaker\bin\Debug\HashBreaker.pdb
+C:\Users\user\Desktop\Projets\Overflow\hashbreaker\obj\Debug\HashBreaker.csprojResolveAssemblyReference.cache
+C:\Users\user\Desktop\Projets\Overflow\hashbreaker\obj\Debug\HashBreaker.HashBreaker.resources
+C:\Users\user\Desktop\Projets\Overflow\hashbreaker\obj\Debug\HashBreaker.Properties.Resources.resources
+C:\Users\user\Desktop\Projets\Overflow\hashbreaker\obj\Debug\HashBreaker.csproj.GenerateResource.Cache
