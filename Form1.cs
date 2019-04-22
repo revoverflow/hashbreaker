@@ -30,8 +30,40 @@ namespace HashBreaker
             
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            textBox2.Text = textBox2.Text.Trim();
+            if (textBox2.Text == "")
+            {
+                MessageBox.Show("Please enter a valid plain text.");
+                return;
+            }
+            string selected = comboBox6.SelectedItem.ToString();
+            switch (selected)
+            {
+                case "MD5":
+                case "SHA-1":
+                    MD5 md5Hash = MD5.Create();
+                    SHA1 sha1Hash = SHA1.Create();
+                    String hashedval = selected.Equals("MD5") ? createHash(md5Hash, textBox2.Text) : createHash(sha1Hash, textBox2.Text);
+                    setClipboard(hashedval);
+                    MessageBox.Show("The hash has been created !\nValue : \"" + hashedval + "\"\nCopied to the clipboard");
+                    break;
+                case "BASE64":
+                    string crypted = Convert.ToBase64String(Encoding.ASCII.GetBytes(textBox2.Text));
+                    setClipboard(crypted);
+                    MessageBox.Show("The hash has been created !\nValue : \"" + crypted + "\"\nCopied to the clipboard");
+                    break;
+                default:
+                    MessageBox.Show("Please select a valid option for the hash type");
+                    break;
+
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
+            textBox1.Text = textBox1.Text.Trim();
             if(textBox1.Text == "")
             {
                 MessageBox.Show("Please enter a valid hash.");
@@ -57,13 +89,18 @@ namespace HashBreaker
                     int time = Environment.TickCount;
                     string value = Encoding.UTF8.GetString(Convert.FromBase64String(textBox1.Text));
                     int delay = Environment.TickCount - time;
+                    setClipboard(value);
                     setLoadingLabel("Hash decrypted in " + delay + "ms : \"" + value + "\"");
-                    MessageBox.Show("The hash has been decrypted in " + delay + " milliseconds !\nValue : \"" + value + "\"");
+                    MessageBox.Show("The hash has been decrypted in " + delay + " milliseconds !\nValue : \"" + value + "\"\nCopied to the clipboard");
                     break;
                 default:
                     MessageBox.Show("Please select a valid option for the hash type");
                     break;
             }
+        }
+
+        public void setClipboard(string text) {
+            Clipboard.SetText(text);
         }
 
         public bool checkHash(string type, string hash) {
@@ -79,14 +116,14 @@ namespace HashBreaker
         public void decrypt(string type)
         {
             string hash = textBox1.Text;
-            t = new Thread(() => Break(hash, type));
+            t = new Thread(() => breakHash(hash, type));
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.MarqueeAnimationSpeed = 100;
             button2.Visible = true;
             t.Start();
         }
 
-        public void Break(String target, string type)
+        public void breakHash(String target, string type)
         {
             String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
             char[] charsArray = chars.ToCharArray();
@@ -113,9 +150,10 @@ namespace HashBreaker
                         setButtonState(false);
                         stopLoading();
                         setLoadingLabel("Hash decrypted in " + delay + "ms : \"" + value + "\"");
-                        MessageBox.Show("The hash has been decrypted in " + delay + " milliseconds !\nValue : \"" + value + "\"");
+                        MessageBox.Show("The hash has been decrypted in " + delay + " milliseconds !\nValue : \"" + value + "\"\nCopied to the clipboard");
                         disableButton(false);
                         Thread.CurrentThread.Abort();
+                        setClipboard(value);
                     }
 
                     if (value.All(item => item == '~'))
