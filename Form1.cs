@@ -91,10 +91,10 @@ namespace HashBreaker
             String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
             char[] charsArray = chars.ToCharArray();
 
-            var md5Hash = MD5.Create();
-            var sha1Hash = SHA1.Create();
+            SHA1 sha1Hash = SHA1.Create();
+            MD5 md5Hash = MD5.Create();
 
-            int dwStartTime = System.Environment.TickCount;
+            int dwStartTime = Environment.TickCount;
             int charindex = 0;
 
             for (int length = 1; length <= 10; ++length)
@@ -105,8 +105,8 @@ namespace HashBreaker
                 while (true)
                 {
                     String value = Sb.ToString();
-                    String hashedval = (type.Equals("MD5") ? createMD5Hash(md5Hash, value) : type.Equals("SHA-1") ? createSHA1Hash(sha1Hash, value) : "N/A");
-                    int delay = System.Environment.TickCount - dwStartTime;
+                    String hashedval = type.Equals("MD5") ? createHash(md5Hash, value) : createHash(sha1Hash, value);
+                    int delay = Environment.TickCount - dwStartTime;
 
                     if (hashedval.Equals(target))
                     {
@@ -167,19 +167,11 @@ namespace HashBreaker
             }));
         }
 
-        static string createMD5Hash(MD5 md5Hash, string input)
+        static string createHash(object hash, string input)
         {
-            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-            StringBuilder sBuilder = new StringBuilder();
-            for (int i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
-            return sBuilder.ToString();
-        }
-        static string createSHA1Hash(SHA1 sha1Hash, string input)
-        {
-            byte[] data = sha1Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+            byte[] data = null;
+            if (hash is MD5) data = ((MD5)hash).ComputeHash(Encoding.UTF8.GetBytes(input));
+            if (hash is SHA1) data = ((SHA1)hash).ComputeHash(Encoding.UTF8.GetBytes(input));
             StringBuilder sBuilder = new StringBuilder();
             for (int i = 0; i < data.Length; i++)
             {
@@ -205,6 +197,7 @@ namespace HashBreaker
 
         private void button2_Click(object sender, EventArgs e)
         {
+            disableButton(false);
             t.Abort();
             progressBar1.Style = ProgressBarStyle.Blocks;
             label3.Text = "Operation aborted.";
