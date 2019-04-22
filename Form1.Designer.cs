@@ -133,7 +133,6 @@
             this.comboBox3.Size = new System.Drawing.Size(169, 27);
             this.comboBox3.TabIndex = 6;
             this.comboBox3.Text = "1";
-            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -145,7 +144,6 @@
             this.label5.Size = new System.Drawing.Size(57, 19);
             this.label5.TabIndex = 7;
             this.label5.Text = "Threads";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // comboBox2
             // 
@@ -161,7 +159,6 @@
             this.comboBox2.Size = new System.Drawing.Size(169, 27);
             this.comboBox2.TabIndex = 4;
             this.comboBox2.Text = "Bruteforce";
-            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // label4
             // 
