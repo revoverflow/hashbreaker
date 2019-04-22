@@ -78,23 +78,12 @@ namespace HashBreaker
 
         public void decrypt(string type)
         {
-            if (type.Equals("MD5")) {
-                string hash = textBox1.Text;
-                t = new Thread(() => Break(hash, type));
-                progressBar1.Style = ProgressBarStyle.Marquee;
-                progressBar1.MarqueeAnimationSpeed = 100;
-                button2.Visible = true;
-                t.Start();
-            }
-           else if (type.Equals("SHA-1")) {
-                string hash = textBox1.Text;
-                t = new Thread(() => Break(hash, type));
-                progressBar1.Style = ProgressBarStyle.Marquee;
-                progressBar1.MarqueeAnimationSpeed = 100;
-                button2.Visible = true;
-                t.Start();
-            }
-
+            string hash = textBox1.Text;
+            t = new Thread(() => Break(hash, type));
+            progressBar1.Style = ProgressBarStyle.Marquee;
+            progressBar1.MarqueeAnimationSpeed = 100;
+            button2.Visible = true;
+            t.Start();
         }
 
         public void Break(String target, string type)
