@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
+using System.Windows.Forms;
 
 namespace HashBreaker
 {
@@ -51,26 +52,41 @@ namespace HashBreaker
             string pattern = "";
             if (type.Equals("MD5")) pattern = "^[a-fA-F0-9]{32}$";
             else if (type.Equals("SHA-1")) pattern = "^[a-fA-F0-9]{40}$";
+            else if (type.Equals("ODO")) pattern = "^[a-zA-Z0-9-]{94}$";
             else if (type.Equals("BASE64")) return (hash.Length % 4 == 0) && Regex.IsMatch(hash, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
             return Regex.IsMatch(hash, pattern, RegexOptions.Compiled);
         }
 
-        public string encrypt(string plain, Callback before, Callback after) {
-            before();
+        public string toODO(string chain)  {
+            this.type = "SHA-1";
+            string sha1Hash = this.encrypt(chain);
+            this.type = "MD5";
+            string fmd5Hash = this.encrypt(sha1Hash);
+            string smd5Hash = Utils.reverse(this.encrypt(fmd5Hash));
+            string hash = Utils.randomStr(6) + fmd5Hash + smd5Hash + Utils.randomStr(6);
+            hash = Utils.reverse(hash);
+            hash = Utils.addIndexes(4, hash, "-");
+            return hash;
+        }
+
+        public string encrypt(string plain) {
             byte[] data = null;
             if (type.Equals("MD5")) data = md5.ComputeHash(Encoding.UTF8.GetBytes(plain));
             else if (type.Equals("SHA-1")) data = sha1.ComputeHash(Encoding.UTF8.GetBytes(plain));
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < data.Length; i++)
                 stringBuilder.Append(data[i].ToString("x2"));
-            after();
             return stringBuilder.ToString();
         }
 
-        public void decrypt(string hash, Callback[] callbacks) {
+        public void decrypt(string hash, bool odo, params Callback[] callbacks) {
             if (callbacks.Length < 3) throw new Exception("We need 4 callbacks in decrypt method!");
             callbacks[0]();
             this.threads[0] = new Thread(() => {
+                if (odo) {
+                    hash = hash.Replace("-", string.Empty);
+                    hash = hash.Substring(6, hash.Length - 12);
+                }
                 string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
                 int startTime = Environment.TickCount;
                 for (int length = 1; length <= this.hashLength; ++length) {
@@ -78,7 +94,11 @@ namespace HashBreaker
                     StringBuilder stringBuilder = new StringBuilder(new string('a', length));
                     while (true) {
                         string value = stringBuilder.ToString();
-                        string hashedVal = encrypt(value, x => { }, x => { });
+                        string hashedVal = odo ? toODO(value) : encrypt(value);
+                        if (odo) {
+                            hashedVal = hashedVal.Replace("-", string.Empty); ;
+                            hashedVal = hashedVal.Substring(6, hashedVal.Length - 12);
+                        }
                         if (hashedVal.Equals(hash)) {
                             int delay = Environment.TickCount - startTime;
                             callbacks[2](delay, value);

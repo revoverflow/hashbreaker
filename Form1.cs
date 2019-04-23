@@ -37,11 +37,11 @@ namespace HashBreaker
                 return;
             }
             string selected = comboBox6.SelectedItem.ToString();
-            if ((selected.Equals("MD5") || selected.Equals("SHA-1") || selected.Equals("BASE64")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
+            if ((selected.Equals("MD5") || selected.Equals("SHA-1") || selected.Equals("BASE64") || selected.Equals("ODO")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
             switch (selected) {
                 case "MD5":
                 case "SHA-1":
-                    string hash = this.cryption.encrypt(textBox2.Text, x => { }, x => { });
+                    string hash = this.cryption.encrypt(textBox2.Text);
                     setClipboard(hash);
                     MessageBox.Show("The hash has been created !\nValue : \"" + hash + "\"\nCopied to the clipboard");
                     break;
@@ -49,6 +49,11 @@ namespace HashBreaker
                     string crypted = this.cryption.toBase64(textBox2.Text);
                     setClipboard(crypted);
                     MessageBox.Show("The hash has been created !\nValue : \"" + crypted + "\"\nCopied to the clipboard");
+                    break;
+                case "ODO":
+                    string odo = this.cryption.toODO(textBox2.Text);
+                    setClipboard(odo);
+                    MessageBox.Show("The hash has been created !\nValue : \"" + odo + "\"\nCopied to the clipboard");
                     break;
                 default:
                     MessageBox.Show("Please select a valid option for the hash type");
@@ -67,16 +72,16 @@ namespace HashBreaker
                 return;
             }
             string selected = comboBox1.SelectedItem.ToString();
-            if ((selected.Equals("MD5") || selected.Equals("SHA-1") || selected.Equals("BASE64")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
+            if ((selected.Equals("MD5") || selected.Equals("SHA-1") || selected.Equals("BASE64") || selected.Equals("ODO")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
             switch (selected) {
+                case "ODO":
                 case "MD5":
                 case "SHA-1":
                     if (!this.cryption.checkHash(textBox1.Text)) {
                         MessageBox.Show("Please enter a valid hash!");
                         return;
                     }
-                    this.cryption.decrypt(textBox1.Text,
-                    new Cryption.Callback[] {
+                    this.cryption.decrypt(textBox1.Text, selected.Equals("ODO"),
                         x => {
                             controlOptions(button1, control => control.Visible = false);
                             controlOptions(button2, control => control.Visible = true);
@@ -89,12 +94,13 @@ namespace HashBreaker
                             string v = (string) x[1];
                             controlOptions(button1, control => control.Visible = true);
                             controlOptions(button2, control => control.Visible = false);
+                            controlOptions(button3, control => control.Visible = true);
                             controlOptions(progressBar1, control => ((ProgressBar)control).Style = ProgressBarStyle.Blocks);
                             controlOptions(label3, control => control.Text = "Hash decrypted in " + d + "ms : \"" + v + "\"");
                             MessageBox.Show("The hash has been decrypted in " + d + " milliseconds !\nValue : \"" + v + "\"\nCopied to the clipboard");
                         },
                         x => setClipboard((string) x[0])
-                    });
+                    );
                     break;
                 case "BASE64":
                     if (!this.cryption.checkHash(textBox1.Text)) {

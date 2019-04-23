@@ -69,7 +69,8 @@
             this.comboBox1.Items.AddRange(new object[] {
             "MD5",
             "SHA-1",
-            "BASE64"});
+            "BASE64",
+            "ODO"});
             this.comboBox1.Location = new System.Drawing.Point(25, 62);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox1.Name = "comboBox1";
@@ -237,7 +238,8 @@
             this.comboBox6.Items.AddRange(new object[] {
             "MD5",
             "SHA-1",
-            "BASE64"});
+            "BASE64",
+            "ODO"});
             this.comboBox6.Location = new System.Drawing.Point(36, 62);
             this.comboBox6.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox6.Name = "comboBox6";
