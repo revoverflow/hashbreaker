@@ -42,7 +42,7 @@ https://docs.microsoft.com/en-us/visualstudio/ide/compiling-and-building-in-visu
 - [ ] Hashing algorithms
     - [ ] MD4
     - [x] MD5
-    - [x] MD6
+    - [ ] MD6
     - [x] SHA-1
     - [x] SHA-256
     - [x] SHA-384
