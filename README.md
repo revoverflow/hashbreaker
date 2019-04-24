@@ -12,6 +12,9 @@
 ## __What's HashBreaker ?__
 HashBreaker is an C# hash tool program to easily crypt and decrypt in many different hashing algorithms like MD5, SHA-1, SHA-256 or ODO (our own hashing algorithm).
 
+## __Ok, but an hash is not reversible...__
+Yes, that's real, but we use a dictionnary bruteforce attack, fully optimised for cracking any hash.
+
 ## __Ok, but why i should use that ?__
 HashBreaker can be used to crypt some confidential data like passwords or to decrypt database data.
 
