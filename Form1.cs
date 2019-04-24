@@ -37,10 +37,15 @@ namespace HashBreaker
                 return;
             }
             string selected = comboBox6.SelectedItem.ToString();
-            if ((selected.Equals("MD5") || selected.Equals("SHA-1") || selected.Equals("BASE64") || selected.Equals("ODO")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
+            if ((selected.Equals("MD5") ||
+                    selected.Equals("SHA-1") || selected.Equals("SHA-256") || selected.Equals("SHA-384") || selected.Equals("SHA-512") ||
+                    selected.Equals("BASE64") || selected.Equals("ODO")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
             switch (selected) {
                 case "MD5":
                 case "SHA-1":
+                case "SHA-256":
+                case "SHA-384":
+                case "SHA-512":
                     string hash = this.cryption.encrypt(textBox2.Text);
                     setClipboard(hash);
                     MessageBox.Show("The hash has been created !\nValue : \"" + hash + "\"\nCopied to the clipboard");
@@ -72,11 +77,16 @@ namespace HashBreaker
                 return;
             }
             string selected = comboBox1.SelectedItem.ToString();
-            if ((selected.Equals("MD5") || selected.Equals("SHA-1") || selected.Equals("BASE64") || selected.Equals("ODO")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
+            if ((selected.Equals("MD5") || 
+                    selected.Equals("SHA-1") || selected.Equals("SHA-256") || selected.Equals("SHA-384") || selected.Equals("SHA-512") ||
+                    selected.Equals("BASE64") || selected.Equals("ODO")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
             switch (selected) {
                 case "ODO":
                 case "MD5":
                 case "SHA-1":
+                case "SHA-256":
+                case "SHA-384":
+                case "SHA-512":
                     if (!this.cryption.checkHash(textBox1.Text)) {
                         MessageBox.Show("Please enter a valid hash!");
                         return;
