@@ -35,3 +35,28 @@ First, download the source code using git command line or by downloading the zip
 Then, open the folder with Visual Studio and build the project, here is a tutorial for Building with Visual Studio 2019 :
 
 https://docs.microsoft.com/en-us/visualstudio/ide/compiling-and-building-in-visual-studio?view=vs-2019
+
+# TODO list
+
+- [ ] Redesign the interface
+- [ ] Hashing algorithms
+    - [ ] MD4
+    - [x] MD5
+    - [x] MD6
+    - [x] SHA-1
+    - [x] SHA-256
+    - [x] SHA-384
+    - [x] SHA-512
+    - [x] BASE64
+    - [x] ODO : Our own hashing alogithm
+- [x] Bruteforce mode
+- [ ] Database mode
+- [ ] Intelligent mode
+- [ ] Hash database generator
+
+# Donations
+Feel free to donate us, that gives us desire to continue the project and provide new updates for you.
+
+[Donate to Overflow](paypal.me/donotplaywithme)
+
+[Donate to OpperDev](paypal.me/donotplaywithme)
