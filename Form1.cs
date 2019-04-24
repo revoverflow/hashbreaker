@@ -96,6 +96,8 @@ namespace HashBreaker
                             controlOptions(button1, control => control.Visible = false);
                             controlOptions(button2, control => control.Visible = true);
                             controlOptions(button3, control => control.Visible = false);
+                            controlOptions(comboBox1, control => control.Enabled = false);
+                            controlOptions(comboBox6, control => control.Enabled = false);
                             controlOptions(progressBar1, control => ((ProgressBar)control).Style = ProgressBarStyle.Marquee);
                         },
                         x => controlOptions(label3, control => control.Text = "Length: "+x[0]),
@@ -105,6 +107,8 @@ namespace HashBreaker
                             controlOptions(button1, control => control.Visible = true);
                             controlOptions(button2, control => control.Visible = false);
                             controlOptions(button3, control => control.Visible = true);
+                            controlOptions(comboBox1, control => control.Enabled = true);
+                            controlOptions(comboBox6, control => control.Enabled = true);
                             controlOptions(progressBar1, control => ((ProgressBar)control).Style = ProgressBarStyle.Blocks);
                             controlOptions(label3, control => control.Text = "Hash decrypted in " + d + "ms : \"" + v + "\"");
                             MessageBox.Show("The hash has been decrypted in " + d + " milliseconds !\nValue : \"" + v + "\"\nCopied to the clipboard");
@@ -132,7 +136,10 @@ namespace HashBreaker
         
         private void button2_Click(object sender, EventArgs e) {
             controlOptions(button1, control => control.Visible = true);
+            controlOptions(button2, control => control.Visible = false);
             controlOptions(button3, control => control.Visible = true);
+            controlOptions(comboBox1, control => control.Enabled = true);
+            controlOptions(comboBox6, control => control.Enabled = true);
             this.cryption.abortThread(0);
             progressBar1.Style = ProgressBarStyle.Blocks;
             label3.Text = "Operation aborted.";
