@@ -57,6 +57,6 @@ https://docs.microsoft.com/en-us/visualstudio/ide/compiling-and-building-in-visu
 # Donations
 Feel free to donate us, that gives us desire to continue the project and provide new updates for you.
 
-[Donate to Overflow](paypal.me/donotplaywithme)
+[Donate to Overflow](https://paypal.me/donotplaywithme)
 
-[Donate to OpperDev](paypal.me/donotplaywithme)
+[Donate to OpperDev](https://paypal.me/OpperDev)
