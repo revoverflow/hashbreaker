@@ -69,6 +69,9 @@
             this.comboBox1.Items.AddRange(new object[] {
             "MD5",
             "SHA-1",
+            "SHA-256",
+            "SHA-384",
+            "SHA-512",
             "BASE64",
             "ODO"});
             this.comboBox1.Location = new System.Drawing.Point(25, 62);
@@ -238,6 +241,9 @@
             this.comboBox6.Items.AddRange(new object[] {
             "MD5",
             "SHA-1",
+            "SHA-256",
+            "SHA-384",
+            "SHA-512",
             "BASE64",
             "ODO"});
             this.comboBox6.Location = new System.Drawing.Point(36, 62);

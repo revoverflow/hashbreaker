@@ -23,6 +23,9 @@ namespace HashBreaker
 
         private MD5 md5;
         private SHA1 sha1;
+        private SHA256 sha256;
+        private SHA384 sha384;
+        private SHA512 sha512;
 
         public Cryption(int maxThreads = 1, int hashLength = 10,string type = "MD5", string method = "bruteforce") {
             if (maxThreads < 1) throw new Exception("MaxThreads can't be under 1!");
@@ -36,6 +39,9 @@ namespace HashBreaker
 
             this.md5 = MD5.Create();
             this.sha1 = SHA1.Create();
+            this.sha256 = SHA256.Create();
+            this.sha384 = SHA384.Create();
+            this.sha512 = SHA512.Create();
         }
 
         public string toBase64(string str) {
@@ -52,6 +58,9 @@ namespace HashBreaker
             string pattern = "";
             if (type.Equals("MD5")) pattern = "^[a-fA-F0-9]{32}$";
             else if (type.Equals("SHA-1")) pattern = "^[a-fA-F0-9]{40}$";
+            else if (type.Equals("SHA-256")) pattern = "^[a-fA-F0-9]{64}$";
+            else if (type.Equals("SHA-384")) pattern = "^[a-fA-F0-9]{96}$";
+            else if (type.Equals("SHA-512")) pattern = "^[a-fA-F0-9]{128}$";
             else if (type.Equals("ODO")) pattern = "^[a-zA-Z0-9-]{94}$";
             else if (type.Equals("BASE64")) return (hash.Length % 4 == 0) && Regex.IsMatch(hash, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
             return Regex.IsMatch(hash, pattern, RegexOptions.Compiled);
@@ -73,6 +82,9 @@ namespace HashBreaker
             byte[] data = null;
             if (type.Equals("MD5")) data = md5.ComputeHash(Encoding.UTF8.GetBytes(plain));
             else if (type.Equals("SHA-1")) data = sha1.ComputeHash(Encoding.UTF8.GetBytes(plain));
+            else if (type.Equals("SHA-256")) data = sha256.ComputeHash(Encoding.UTF8.GetBytes(plain));
+            else if (type.Equals("SHA-384")) data = sha384.ComputeHash(Encoding.UTF8.GetBytes(plain));
+            else if (type.Equals("SHA-512")) data = sha512.ComputeHash(Encoding.UTF8.GetBytes(plain));
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < data.Length; i++)
                 stringBuilder.Append(data[i].ToString("x2"));
