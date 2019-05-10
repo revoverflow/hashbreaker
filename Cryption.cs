@@ -31,13 +31,14 @@ namespace HashBreaker
             this.type = type;
             this.method = method;
 
-            this.hashAlgos = new HashAlgorithm[5];
+            this.hashAlgos = new HashAlgorithm[6];
 
             this.hashAlgos[0] = MD5.Create();
             this.hashAlgos[1] = SHA1.Create();
             this.hashAlgos[2] = SHA256.Create();
             this.hashAlgos[3] = SHA384.Create();
             this.hashAlgos[4] = SHA512.Create();
+            this.hashAlgos[5] = MD4.Create();
         }
 
         public string toBase64(string str) {
@@ -53,6 +54,7 @@ namespace HashBreaker
             if (string.IsNullOrWhiteSpace(hash)) return false;
             string pattern = "";
             if (type.Equals("MD5")) pattern = "^[a-fA-F0-9]{32}$";
+            else if (type.Equals("MD4")) pattern = "^[a-fA-F0-9]{40}$";
             else if (type.Equals("SHA-1")) pattern = "^[a-fA-F0-9]{40}$";
             else if (type.Equals("SHA-256")) pattern = "^[a-fA-F0-9]{64}$";
             else if (type.Equals("SHA-384")) pattern = "^[a-fA-F0-9]{96}$";
@@ -81,6 +83,7 @@ namespace HashBreaker
             else if (type.Equals("SHA-256")) data = this.hashAlgos[2].ComputeHash(Encoding.UTF8.GetBytes(plain));
             else if (type.Equals("SHA-384")) data = this.hashAlgos[3].ComputeHash(Encoding.UTF8.GetBytes(plain));
             else if (type.Equals("SHA-512")) data = this.hashAlgos[4].ComputeHash(Encoding.UTF8.GetBytes(plain));
+            else if (type.Equals("MD4")) data = this.hashAlgos[5].ComputeHash(Encoding.UTF8.GetBytes(plain));
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < data.Length; i++)
                 stringBuilder.Append(data[i].ToString("x2"));

@@ -65,6 +65,7 @@
             this.comboBox1.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
+            "MD4",
             "MD5",
             "SHA-1",
             "SHA-256",
@@ -208,6 +209,7 @@
             this.comboBox6.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboBox6.FormattingEnabled = true;
             this.comboBox6.Items.AddRange(new object[] {
+            "MD4",
             "MD5",
             "SHA-1",
             "SHA-256",

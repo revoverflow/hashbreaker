@@ -37,10 +37,11 @@ namespace HashBreaker
                 return;
             }
             string selected = comboBox6.SelectedItem.ToString();
-            if ((selected.Equals("MD5") ||
+            if ((selected.Equals("MD5") || selected.Equals("MD4") ||
                     selected.Equals("SHA-1") || selected.Equals("SHA-256") || selected.Equals("SHA-384") || selected.Equals("SHA-512") ||
                     selected.Equals("BASE64") || selected.Equals("ODO")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
             switch (selected) {
+                case "MD4":
                 case "MD5":
                 case "SHA-1":
                 case "SHA-256":
@@ -77,11 +78,12 @@ namespace HashBreaker
                 return;
             }
             string selected = comboBox1.SelectedItem.ToString();
-            if ((selected.Equals("MD5") || 
+            if ((selected.Equals("MD5") || selected.Equals("MD4") ||
                     selected.Equals("SHA-1") || selected.Equals("SHA-256") || selected.Equals("SHA-384") || selected.Equals("SHA-512") ||
                     selected.Equals("BASE64") || selected.Equals("ODO")) && !this.cryption.type.Equals(selected)) this.cryption.type = selected;
             switch (selected) {
                 case "ODO":
+                case "MD4":
                 case "MD5":
                 case "SHA-1":
                 case "SHA-256":
